@@ -1,7 +1,6 @@
-# DRF-Chat
+# Simple chat application
 Live Chat using Django REST Framework
 
-(_One of my just-for-fun projects_)
 
 ## Installation
 
