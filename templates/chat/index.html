@@ -19,12 +19,36 @@
 
     <body>
     {% block body %}
-        <div class="section blue lighten-3">
+        {% if err %}
+            <div class="row" id="alert_box">
+              <div class="col s12 m12">
+                <div class="card red darken-1">
+                  <div class="row">
+                    <div class="col s12 m10">
+                      <div class="card-content white-text">
+                        <p>User doesn't exist</p>
+                    </div>
+                  </div>
+                  <div class="col s12 m2">
+                    <i class="fa fa-times icon_style" id="alert_close" aria-hidden="true"></i>
+                  </div>
+                </div>
+               </div>
+              </div>
+            </div>
+            <script>
+                $('#alert_close').click(function(){
+                    $( "#alert_box" ).fadeOut( "slow", function() {
+                    });
+                  });
+            </script>
+        {% endif %}
+        <div class="section red lighten-1">
             <div class="container white-text center-align text">
-            <h2>Chat</h2>
-            <p>A simple Chat App using DjangoRestFramework</p>
+            <h2><a href="/" style="color: antiquewhite">JustChat</a></h2>
+            <p>Real-time messaging app</p>
             <div class="chip">
-                <img src="https://opbeat.com/docs/static/images/stacks/logo_django_alt.svg" class="white">
+                <img src="http://seanmm.com/assets/images/tech/django.svg" class="white">
                 Django
             </div>
             <div class="chip">
@@ -46,12 +70,14 @@
                         {% csrf_token %}
                         <div class="row">
                             <div class="input-field col s12">
+                                <i class="material-icons prefix">account_circle</i>
                                 <input name="username" id="id_username" type="text">
                                 <label for="id_username">Username</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
+                                <i class="material-icons prefix">vpn_key</i>
                                 <input name="password" id="id_password" type="password">
                                 <label for="id_password">Password</label>
                             </div>
