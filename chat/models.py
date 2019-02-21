@@ -6,7 +6,6 @@ import datetime
 from django.core.cache import cache
 
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -25,6 +24,7 @@ class UserProfile(models.Model):
                 return True
         else: 
             return False
+
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
