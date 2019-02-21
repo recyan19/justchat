@@ -20,14 +20,14 @@ def index(request):
         if user is not None:
             login(request, user)
         else:
-            return HttpResponse('{"error": "User does not exist"}')
+            return render(request, 'chat/index.html', {'err': 'User does not exist'})
         return redirect('chats')
 
 
 @csrf_exempt
 def user_list(request, pk=None):
     """
-    List all required messages, or create a new message.
+    List all required users, or create a new user.
     """
     if request.method == 'GET':
         if pk:
@@ -81,6 +81,7 @@ def register_view(request):
 def chat_view(request):
     if not request.user.is_authenticated:
         return redirect('index')
+
     if request.method == "GET":
         return render(request, 'chat/chat.html',
                       {'users': User.objects.exclude(username=request.user.username)})
@@ -95,3 +96,4 @@ def message_view(request, sender, receiver):
                        'receiver': User.objects.get(id=receiver),
                        'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
                                    Message.objects.filter(sender_id=receiver, receiver_id=sender)})
+
