@@ -7,10 +7,10 @@ let userState = ''
 
 const userDiv = (senderId, receiverId, name, online) =>
     (`<a href="/chat/${senderId}/${receiverId}" id="user${receiverId}" class="collection-item row">
-                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
+                    <img src="https://www.shareicon.net/data/256x256/2016/10/20/846414_letter_512x512.png" class="col s2">
                     <div class="col s10">
-                    <span class="title" style="font-weight: bolder">${name}</span>
-                    <span style="color: ${online ? 'green' : 'red'}; float: right">${online ? 'online' : 'offline'}</span>
+                    <span class="title" style="font-weight: bolder; font-size: 18px">${name}</span>
+                    <span style="color: ${online ? 'green' : 'red'}; float: right;">${online ? 'online' : 'offline'}</span>
                     </div>
                 </a>`)
 
@@ -38,7 +38,7 @@ function receive() {
                 console.log(data[i]);
                 var box = text_box.replace('{sender}', data[i].sender);
                 box = box.replace('{message}', data[i].message);
-                box = box.replace('right', 'left blue lighten-5');
+                box = box.replace('right', 'left red lighten-4');
                 $('#board').append(box);
                 scrolltoend();
             }
