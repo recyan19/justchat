@@ -13,4 +13,6 @@ urlpatterns = [
     path('api/users', views.user_list, name='user-list'),
     path('logout', LogoutView.as_view(next_page='index'), name='logout'),
     path('register', views.register_view, name='register'),
+    path('search/', views.search_view, name='search'),
+    path('search/<str:username>', views.search_view, name='search_detail')
 ]

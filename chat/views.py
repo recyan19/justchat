@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from chat.models import Message, UserProfile
 from chat.serializers import MessageSerializer, UserSerializer
+from django.db.models import Q
+import sqlite3
 
 
 def index(request):
@@ -33,7 +35,19 @@ def user_list(request, pk=None):
         if pk:
             users = User.objects.filter(id=pk)
         else:
-            users = User.objects.all()
+            sql1 = """SELECT receiver_id FROM chat_message WHERE sender_id=? AND message IS NOT NULL GROUP BY receiver_id"""
+            sql2 = """SELECT sender_id FROM chat_message WHERE receiver_id=? AND message IS NOT NULL GROUP BY sender_id"""
+            conn = sqlite3.connect('db.sqlite3')
+            cur = conn.cursor()
+            cur.execute(sql1, (request.user.id,))
+            l1 = cur.fetchall()
+            cur.execute(sql2, (request.user.id,))
+            l2 = cur.fetchall()
+            x = [i[0] for i in l1]
+            y = [i[0] for i in l2]
+            res = list(set(x + y))
+            users = User.objects.filter(id__in=res).exclude(id=request.user.id)
+            #users = User.objects.all()
         serializer = UserSerializer(users, many=True, context={'request': request})
         return JsonResponse(serializer.data, safe=False)
 
@@ -83,17 +97,46 @@ def chat_view(request):
         return redirect('index')
 
     if request.method == "GET":
+        sql = """SELECT receiver_id FROM chat_message WHERE sender_id=? AND message IS NOT NULL GROUP BY receiver_id"""
+        conn = sqlite3.connect('db.sqlite3')
+        cur = conn.cursor()
+        cur.execute(sql, (request.user.id,))
+        l = cur.fetchall()
+        x = [i[0] for i in l]
+        users = User.objects.filter(id__in=x).exclude(id=request.user.id)
+        # query = request.GET.get('q')
+        # if query:
+        #     users = User.objects.filter(username__contains=query)
         return render(request, 'chat/chat.html',
-                      {'users': User.objects.exclude(username=request.user.username)})
+                      {'users': users})
+
+
 
 
 def message_view(request, sender, receiver):
     if not request.user.is_authenticated:
         return redirect('index')
     if request.method == "GET":
+        sql = """SELECT sender_id FROM chat_message WHERE sender_id=? AND receiver_id=? AND NOT(message IS NULL)"""
+        conn = sqlite3.connect('db.sqlite3')
+        cur = conn.cursor()
+        cur.execute(sql, (sender, receiver))
+        l = cur.fetchall()
+        x = [i[0] for i in l]
+        #users = User.objects.filter(id__in=x)
+
         return render(request, "chat/messages.html",
-                      {'users': User.objects.exclude(username=request.user.username),
+                      {'users': User.objects.exclude(id__in=x).exclude(username=request.user.username),
                        'receiver': User.objects.get(id=receiver),
                        'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
                                    Message.objects.filter(sender_id=receiver, receiver_id=sender)})
 
+def search_view(request, username=None):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    if request.method == "GET":
+        users = []
+        query = request.GET.get('q')
+        if query:
+            users = User.objects.filter(username__contains=query)
+        return render(request, "chat/search.html", {'users': users})

@@ -133,7 +133,7 @@ CACHES = {
 }
 
 # Number of seconds of inactivity before a user is marked offline
-USER_ONLINE_TIMEOUT = 300
+USER_ONLINE_TIMEOUT = 60
 
 # Number of seconds that we will keep track of inactive users for before
 # their last seen is removed from the cache

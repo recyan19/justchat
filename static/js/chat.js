@@ -9,7 +9,7 @@ const userDiv = (senderId, receiverId, name, online) =>
     (`<a href="/chat/${senderId}/${receiverId}" id="user${receiverId}" class="collection-item row">
                     <img src="https://www.shareicon.net/data/256x256/2016/10/20/846414_letter_512x512.png" class="col s2">
                     <div class="col s10">
-                    <span class="title" style="font-weight: bolder; font-size: 18px">${name}</span>
+                    <span class="title" style="font-weight: bolder;font-size: 1.1rem;">${name}</span>
                     <span style="color: ${online ? 'green' : 'red'}; float: right;">${online ? 'online' : 'offline'}</span>
                     </div>
                 </a>`)

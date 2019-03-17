@@ -18,6 +18,12 @@
     right: 10px;
     top: 10px;
     font-size: 20px;
-    color: white;
+    color: green;
     cursor:pointer;
 }
+
+@media screen and (device-width: 320px) {
+    div#usr {width: 100%;}
+    div#resp_board {width: 100%;}
+   }
+
