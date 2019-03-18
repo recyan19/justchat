@@ -8,6 +8,7 @@ from chat.models import Message, UserProfile
 from chat.serializers import MessageSerializer, UserSerializer
 from django.db.models import Q
 import sqlite3
+import psycopg2
 
 
 def index(request):
@@ -35,9 +36,21 @@ def user_list(request, pk=None):
         if pk:
             users = User.objects.filter(id=pk)
         else:
-            sql1 = """SELECT receiver_id FROM chat_message WHERE sender_id=? AND message IS NOT NULL GROUP BY receiver_id"""
-            sql2 = """SELECT sender_id FROM chat_message WHERE receiver_id=? AND message IS NOT NULL GROUP BY sender_id"""
-            conn = sqlite3.connect('db.sqlite3')
+            # sql1 = """SELECT receiver_id FROM chat_db.chat_message WHERE sender_id=(%s) AND message IS NOT NULL GROUP BY receiver_id;"""
+            # sql2 = """SELECT sender_id FROM chat_db.chat_message WHERE receiver_id=(%s) AND message IS NOT NULL GROUP BY sender_id;"""
+            # conn = sqlite3.connect('db.sqlite3')
+            # cur = conn.cursor()
+            # cur.execute(sql1, (request.user.id,))
+            # l1 = cur.fetchall()
+            # cur.execute(sql2, (request.user.id,))
+            # l2 = cur.fetchall()
+            conn = psycopg2.connect(user = "db_admin9",
+                                    password = "K456er47w",
+                                    host = "127.0.0.1",
+                                    port = "5432",
+                                    database = "chat_db")
+            sql1 = """SELECT receiver_id FROM chat_message WHERE sender_id=(%s) AND message IS NOT NULL GROUP BY receiver_id;"""
+            sql2 = """SELECT sender_id FROM chat_message WHERE receiver_id=(%s) AND message IS NOT NULL GROUP BY sender_id;"""
             cur = conn.cursor()
             cur.execute(sql1, (request.user.id,))
             l1 = cur.fetchall()
@@ -97,8 +110,13 @@ def chat_view(request):
         return redirect('index')
 
     if request.method == "GET":
-        sql = """SELECT receiver_id FROM chat_message WHERE sender_id=? AND message IS NOT NULL GROUP BY receiver_id"""
-        conn = sqlite3.connect('db.sqlite3')
+        sql = """SELECT receiver_id FROM chat_message WHERE sender_id=(%s) AND message IS NOT NULL GROUP BY receiver_id"""
+        #conn = sqlite3.connect('db.sqlite3')
+        conn = psycopg2.connect(user = "db_admin9",
+                                password = "K456er47w",
+                                host = "127.0.0.1",
+                                port = "5432",
+                                database = "chat_db")
         cur = conn.cursor()
         cur.execute(sql, (request.user.id,))
         l = cur.fetchall()
@@ -117,13 +135,22 @@ def message_view(request, sender, receiver):
     if not request.user.is_authenticated:
         return redirect('index')
     if request.method == "GET":
-        sql = """SELECT sender_id FROM chat_message WHERE sender_id=? AND receiver_id=? AND NOT(message IS NULL)"""
-        conn = sqlite3.connect('db.sqlite3')
+        # conn = sqlite3.connect('db.sqlite3')
+        # cur = conn.cursor()
+        # cur.execute(sql, (sender, receiver))
+        # l = cur.fetchall()
+        # x = [i[0] for i in l]
+        conn = psycopg2.connect(user = "db_admin9",
+                                password = "K456er47w",
+                                host = "127.0.0.1",
+                                port = "5432",
+                                database = "chat_db")
+        sql = """SELECT sender_id FROM chat_message WHERE sender_id=(%s) AND receiver_id=(%s) AND NOT(message IS NULL);"""
         cur = conn.cursor()
         cur.execute(sql, (sender, receiver))
         l = cur.fetchall()
         x = [i[0] for i in l]
-        #users = User.objects.filter(id__in=x)
+        users = User.objects.filter(id__in=x)
 
         return render(request, "chat/messages.html",
                       {'users': User.objects.exclude(id__in=x).exclude(username=request.user.username),
