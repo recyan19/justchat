@@ -45,7 +45,7 @@ def user_list(request, pk=None):
             # cur.execute(sql2, (request.user.id,))
             # l2 = cur.fetchall()
             conn = psycopg2.connect(user = "db_admin9",
-                                    password = "K456er47w",
+                                    password = "password",
                                     host = "127.0.0.1",
                                     port = "5432",
                                     database = "chat_db")
@@ -113,7 +113,7 @@ def chat_view(request):
         sql = """SELECT receiver_id FROM chat_message WHERE sender_id=(%s) AND message IS NOT NULL GROUP BY receiver_id"""
         #conn = sqlite3.connect('db.sqlite3')
         conn = psycopg2.connect(user = "db_admin9",
-                                password = "K456er47w",
+                                password = "password",
                                 host = "127.0.0.1",
                                 port = "5432",
                                 database = "chat_db")
@@ -143,7 +143,7 @@ def message_view(request, sender, receiver):
         # l = cur.fetchall()
         # x = [i[0] for i in l]
         conn = psycopg2.connect(user = "db_admin9",
-                                password = "K456er47w",
+                                password = "password",
                                 host = "127.0.0.1",
                                 port = "5432",
                                 database = "chat_db")
