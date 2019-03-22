@@ -1,12 +1,59 @@
-<form method="GET" action="" id="searchform">
+<!-- <form method="GET" action="" id="searchform">
 	{% csrf_token %}
     <input class="searchfield" id="searchbox" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search..."/>
-</form>
+</form> -->
+{% load staticfiles %}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <title>Justchat</title>
+      <!--Import jQuery before materialize.js-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{% static 'img/j-152-193314.png' %}">
+
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'img/j-144-193314.png' %}">
+
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{% static 'img/j-120-193314.png' %}">
+
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'img/j-114-193314.png' %}">
+
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'img/j-72-193314.png' %}">
+
+        <link rel="apple-touch-icon-precomposed" href="{% static 'img/j-57-193314.png' %}">
+
+        <link rel="icon" href="{% static 'img/j-32-193314.png' %}" sizes="32x32">
+    </head>
+<body style="background-color: whitesmoke;">
+<nav>
+<div class="nav-wrapper">
+  <form method="GET" action="" id="searchform">
+    <div class="input-field">
+		{% csrf_token %}
+    	<input class="searchfield" id="searchbox" style="margin-left: 1%" name="q" type="text" value="{{ request.GET.q }}" placeholder="Search..."/>
+      	<!-- <label class="label-icon" for="searchbox"><i class="material-icons">search</i></label> -->
+      	<i class="material-icons">close</i>
+    </div>
+  </form>
+</div>
+</nav>
+
+
 {% for user in users %}
 <div class="card">
 	<div id="users" class="collection">
 		<a href="/chat/{{ request.user.id }}/{{ user.id }}" id="user{{ user.id }}" class="collection-item row">
-		<img src="https://www.shareicon.net/data/256x256/2016/10/20/846414_letter_512x512.png" class="col s2">
+		<img src="https://www.shareicon.net/data/256x256/2016/10/20/846414_letter_512x512.png"  style="width: 2.666667%;" class="col s2">
 			<div class="col s10">
 				<span class="title" style="font-weight: bolder;font-size: 1.1rem;">{{ user.username }}</span>
 			</div>
@@ -14,3 +61,4 @@
 	</div>
 </div>
 {% endfor %}
+</body>

@@ -134,6 +134,8 @@ def chat_view(request):
 def message_view(request, sender, receiver):
     if not request.user.is_authenticated:
         return redirect('index')
+    if not request.user.id == sender:
+        return redirect('index')
     if request.method == "GET":
         # conn = sqlite3.connect('db.sqlite3')
         # cur = conn.cursor()
